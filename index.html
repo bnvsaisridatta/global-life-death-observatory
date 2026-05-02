@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VitalStats — Global Life & Death Observatory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NOISE OVERLAY -->
+  <div class="noise"></div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-mark">●</span>
+        <span class="logo-text">VitalStats</span>
+        <span class="logo-sub">Global Observatory</span>
+      </div>
+      <nav class="top-nav">
+        <a href="#live" class="nav-link active">Live</a>
+        <a href="#historical" class="nav-link">Historical</a>
+        <a href="#compare" class="nav-link">Compare</a>
+        <a href="#about" class="nav-link">About</a>
+      </nav>
+      <div class="live-badge">
+        <span class="pulse-dot"></span>
+        <span>Live estimates</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">100 years of humanity · updating every second</p>
+      <h1 class="hero-title">Every life <em>counted</em>.<br>Every death <em>witnessed</em>.</h1>
+      <p class="hero-desc">Real-time global statistics on births, deaths, homicides, suicides, IVF births, and more — sourced from WHO, UN, UNODC, and ESHRE open data.</p>
+    </div>
+    <div class="ticker-strip">
+      <div class="ticker-inner" id="tickerInner"></div>
+    </div>
+  </section>
+
+  <!-- LIVE COUNTERS -->
+  <section class="section" id="live">
+    <div class="section-header">
+      <h2 class="section-title">Live counters <span class="badge-live">updating</span></h2>
+      <p class="section-desc">Estimated counts since midnight UTC today, ticking in real time.</p>
+    </div>
+    <div class="counter-grid" id="counterGrid"></div>
+  </section>
+
+  <!-- YEAR SELECTOR BAR -->
+  <div class="year-bar">
+    <span class="year-bar-label">Viewing year range:</span>
+    <div class="year-controls">
+      <label>From <input type="number" id="yearFrom" value="1924" min="1924" max="2023" /></label>
+      <span class="year-sep">→</span>
+      <label>To <input type="number" id="yearTo" value="2024" min="1924" max="2024" /></label>
+      <button class="btn-apply" onclick="applyYearRange()">Apply</button>
+    </div>
+  </div>
+
+  <!-- SELECTABLE CATEGORIES -->
+  <section class="section filter-section">
+    <div class="section-header">
+      <h2 class="section-title">Select categories to display</h2>
+    </div>
+    <div class="category-pills" id="categoryPills"></div>
+  </section>
+
+  <!-- HISTORICAL CHARTS -->
+  <section class="section" id="historical">
+    <div class="section-header">
+      <h2 class="section-title">Historical trends</h2>
+      <p class="section-desc">100-year trajectory of each metric. Toggle above to show/hide categories.</p>
+    </div>
+
+    <div class="chart-tabs">
+      <button class="tab-btn active" data-tab="line">Line chart</button>
+      <button class="tab-btn" data-tab="bar">Bar chart</button>
+      <button class="tab-btn" data-tab="area">Area chart</button>
+    </div>
+
+    <div class="chart-card" id="mainChartCard">
+      <canvas id="historicalChart"></canvas>
+    </div>
+  </section>
+
+  <!-- COMPARISON SECTION -->
+  <section class="section" id="compare">
+    <div class="section-header">
+      <h2 class="section-title">Year-by-year comparison</h2>
+      <p class="section-desc">Select any two years to compare all metrics side-by-side.</p>
+    </div>
+    <div class="compare-controls">
+      <div class="compare-select-wrap">
+        <label>Year A</label>
+        <select id="yearA"></select>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="compare-select-wrap">
+        <label>Year B</label>
+        <select id="yearB"></select>
+      </div>
+      <button class="btn-apply" onclick="renderComparison()">Compare</button>
+    </div>
+    <div class="chart-card">
+      <canvas id="comparisonChart"></canvas>
+    </div>
+  </section>
+
+  <!-- RATIO SECTION -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">Scale perspective — births vs deaths</h2>
+      <p class="section-desc">For every homicide, how many babies are born? Live calculation.</p>
+    </div>
+    <div class="ratio-grid" id="ratioGrid"></div>
+  </section>
+
+  <!-- PER DAY BREAKDOWN -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">Per-second · per-minute · per-day</h2>
+    </div>
+    <div class="rate-table-wrap">
+      <table class="rate-table" id="rateTable">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Per second</th>
+            <th>Per minute</th>
+            <th>Per hour</th>
+            <th>Per day</th>
+            <th>Per year</th>
+          </tr>
+        </thead>
+        <tbody id="rateTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- DONUT SECTION -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">Cause-of-death distribution (latest year)</h2>
+    </div>
+    <div class="donut-row">
+      <div class="chart-card donut-card">
+        <canvas id="donutChart"></canvas>
+      </div>
+      <div class="donut-legend" id="donutLegend"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="section-header">
+      <h2 class="section-title">Data sources &amp; methodology</h2>
+    </div>
+    <div class="api-grid" id="apiGrid"></div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <p class="footer-logo">VitalStats</p>
+      <p class="footer-note">Data from WHO, UN, UNODC, ESHRE, World Bank open datasets. Live counters are statistical estimates derived from annual rates. Not affiliated with any government body.</p>
+      <p class="footer-copy">Built for educational purposes · CMR Engineering College · 2024</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/counters.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
