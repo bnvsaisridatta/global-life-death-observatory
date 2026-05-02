@@ -4,7 +4,7 @@ A real-time interactive dashboard tracking global statistics on births,
 deaths, homicides, suicides, IVF births, cancer deaths, and more —
 spanning 100 years of data (1924–2024).
 
-🔗 **Live demo:** https://YOUR_USERNAME.github.io/vitalstats/
+🔗 **Live demo:**  https://bnvsaisridatta.github.io/global-life-death-observatory/
 
 ## Features
 - Live ticking counters (updating every 250ms since midnight UTC)
